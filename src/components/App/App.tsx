@@ -14,10 +14,10 @@ export default function App() {
     });
 
     const handleVote = (type: VoteType) => {
-        setVotes({
-            ...votes,
+        setVotes((prev) => ({
+            ...prev,
             [type]: votes[type] + 1,
-        });
+        }));
     }
 
     const resetVotes = () => {
@@ -28,19 +28,13 @@ export default function App() {
         });
     }
 
-    const onVote = (event: React.MouseEvent<HTMLButtonElement>) => {
-        const option = event.currentTarget.textContent.toLowerCase();
-        if (option === 'good' || option === 'neutral' || option === 'bad') {
-            handleVote(option);
-        }
-    }
     
     const totalVotes = votes.bad + votes.good + votes.neutral;
     const positiveRate = totalVotes ? Math.round((votes.good / totalVotes) * 100) : 0
     return (
         <div className={css.app}>
             <CafeInfo />
-            <VoteOptions onVote={onVote} onReset={resetVotes} canReset={totalVotes > 0} />
+            <VoteOptions onVote={handleVote} onReset={resetVotes} canReset={totalVotes > 0} />
 
             {totalVotes === 0 && (<Notification />)}
 
